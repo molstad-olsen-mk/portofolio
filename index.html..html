@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnus — Journalist & Kommunikasjonsrådgiver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f5f0e8;
+    --accent: #c8391a;
+    --muted: #6b6560;
+    --rule: #d4cec5;
+    --col: calc((100% - 120px) / 12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* TOPLINE */
+  .topline {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 8px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 60px 60px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .hero-left {
+    padding-right: 60px;
+    border-right: 1px solid var(--rule);
+    padding-bottom: 60px;
+  }
+
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(56px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+
+  .hero-right {
+    padding-left: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 40px;
+  }
+
+  .stat {
+    background: var(--paper);
+    padding: 24px;
+  }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    padding: 14px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+  /* SECTION HEADER */
+  .section-header {
+    padding: 40px 60px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    padding: 20px 60px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .filter-btn.active-tv { background: #1a4fc8; color: var(--paper); border-color: #1a4fc8; }
+  .filter-btn.active-radio { background: #6b1ac8; color: var(--paper); border-color: #6b1ac8; }
+  .filter-btn.active-article { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  /* WORK GRID */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-left: 1px solid var(--rule);
+  }
+
+  .work-item {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .work-item:hover { background: #f0ebe1; }
+  .work-item.hidden { display: none; }
+
+  .work-item::after {
+    content: '→';
+    position: absolute;
+    bottom: 32px;
+    right: 32px;
+    font-size: 18px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.2s;
+  }
+  .work-item:hover::after { opacity: 1; transform: translateX(0); }
+
+  .work-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+  .work-type.tv { background: #1a4fc820; color: #1a4fc8; }
+  .work-type.radio { background: #6b1ac820; color: #6b1ac8; }
+  .work-type.article { background: #c8391a20; color: var(--accent); }
+
+  .work-type-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .work-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  .work-outlet {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .work-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .work-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--rule);
+    margin-top: 20px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* FEATURED - spans 2 cols */
+  .work-item.featured {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .work-item.featured .work-title { font-size: 28px; }
+
+  /* ABOUT */
+  .about-section {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .about-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .about-right p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .skill-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+  }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .contact-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .contact-left h2 em { font-style: italic; color: var(--accent); }
+
+  .contact-left p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.2s;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+  .contact-link:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* FOOTER */
+  footer {
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,14,13,0.85);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--paper);
+    width: 90%;
+    max-width: 680px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 48px;
+    position: relative;
+    transform: translateY(24px);
+    transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .modal-type { margin-bottom: 16px; }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .modal-outlet {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .modal-body {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .modal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .modal-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* SCROLL ANIMATION */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .topline, .hero, .work-grid, .about-section, .contact-section, footer,
+    .section-header, .filter-bar { padding-left: 24px; padding-right: 24px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { border-right: none; padding-right: 0; border-bottom: 1px solid var(--rule); }
+    .hero-right { padding-left: 0; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work-item.featured { grid-column: span 1; grid-template-columns: 1fr; }
+    .about-section, .contact-section { grid-template-columns: 1fr; gap: 40px; }
+    .modal { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPLINE -->
+<div class="topline">
+  <span>Magnus — Journalist & Strategisk Kommunikasjon</span>
+  <span id="current-date"></span>
+  <span>Oslo, Norge</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-left fade-in">
+    <div class="label">Journalist / Kommunikasjonsrådgiver</div>
+    <h1>Forteller<br><em>historier</em><br>som teller.</h1>
+    <p class="hero-desc">
+      Journalistisk bakgrunn fra lokalavis og NRK Innlandet — skrift, TV og radio. 
+      Nå masterstudent i strategisk kommunikasjon ved Kristiania. Tilgjengelig for oppdrag og fast stilling.
+    </p>
+    <div class="cta-row">
+      <a href="#arbeid" class="btn-primary">Se arbeid</a>
+      <a href="#kontakt" class="btn-outline">Ta kontakt</a>
+    </div>
+  </div>
+  <div class="hero-right fade-in">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Formater</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">NRK</div>
+        <div class="stat-label">Arbeidserfaring</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">MA</div>
+        <div class="stat-label">Strategisk Komm.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Historier igjen</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a href="mailto:post@magnusjournalist.no" class="btn-outline" style="flex:1; text-align:center;">✉ Send e-post</a>
+    </div>
+  </div>
+</header>
+
+<!-- WORK SECTION -->
+<section id="arbeid">
+  <div class="section-header fade-in">
+    <span class="section-title">Utvalgt arbeid</span>
+    <span class="section-count" id="item-count">— 8 arbeider</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="filter-bar fade-in">
+    <button class="filter-btn active" data-filter="all" onclick="filterWork('all', this)">Alle</button>
+    <button class="filter-btn" data-filter="article" onclick="filterWork('article', this)">✍ Artikler</button>
+    <button class="filter-btn" data-filter="tv" onclick="filterWork('tv', this)">📺 TV-innslag</button>
+    <button class="filter-btn" data-filter="radio" onclick="filterWork('radio', this)">🎙 Radio</button>
+  </div>
+
+  <div class="work-grid" id="work-grid">
+
+    <!-- FEATURED TV -->
+    <div class="work-item featured fade-in" data-type="tv" onclick="openModal('tv-1')">
+      <div>
+        <div class="work-type tv"><span class="work-type-dot"></span>TV-innslag</div>
+        <div class="work-title">Legg til tittel på ditt beste TV-innslag her</div>
+        <div class="work-outlet">NRK Innlandet</div>
+        <div class="work-desc">Kort beskrivelse av innslaget — hva handlet det om, hvem snakket du med, og hva var den journalistiske vinkelen. Bytt ut denne teksten med din egen.</div>
+        <div class="work-date">NRK Innlandet — 2024</div>
+      </div>
+      <div style="background: #1a4fc812; border: 1px solid #1a4fc820; display:flex; align-items:center; justify-content:center; font-size:48px;">📺</div>
+    </div>
+
+    <!-- ARTICLE 1 -->
+    <div class="work-item fade-in" data-type="article" onclick="openModal('article-1')">
+      <div class="work-type article"><span class="work-type-dot"></span>Artikkel</div>
+      <div class="work-title">Tittel på artikkel #1</div>
+      <div class="work-outlet">Lokalavisen</div>
+      <div class="work-desc">Kort ingress eller sammendrag av saken. Hva var nyheten? Hvem angår den?</div>
+      <div class="work-date">2023</div>
+    </div>
+
+    <!-- RADIO 1 -->
+    <div class="work-item fade-in" data-type="radio" onclick="openModal('radio-1')">
+      <div class="work-type radio"><span class="work-type-dot"></span>Radio</div>
+      <div class="work-title">Tittel på radioinnslag</div>
+      <div class="work-outlet">NRK Innlandet</div>
+      <div class="work-desc">Beskriv innslaget — tema, kilder, og hva som gjør det minneverdig å lytte til.</div>
+      <div class="work-date">2024</div>
+    </div>
+
+    <!-- ARTICLE 2 -->
+    <div class="work-item fade-in" data-type="article" onclick="openModal('article-2')">
+      <div class="work-type article"><span class="work-type-dot"></span>Artikkel</div>
+      <div class="work-title">Tittel på artikkel #2</div>
+      <div class="work-outlet">Lokalavisen</div>
+      <div class="work-desc">Legg til en kort oppsummering av saken og dens betydning.</div>
+      <div class="work-date">2023</div>
+    </div>
+
+    <!-- TV 2 -->
+    <div class="work-item fade-in" data-type="tv" onclick="openModal('tv-2')">
+      <div class="work-type tv"><span class="work-type-dot"></span>TV-innslag</div>
+      <div class="work-title">Tittel på TV-innslag #2</div>
+      <div class="work-outlet">NRK Innlandet</div>
+      <div class="work-desc">Beskriv dette innslaget — tema, intervjuobjekter, og hva som er det journalistiske poenget.</div>
+      <div class="work-date">2024</div>
+    </div>
+
+    <!-- RADIO 2 -->
+    <div class="work-item fade-in" data-type="radio" onclick="openModal('radio-2')">
+      <div class="work-type radio"><span class="work-type-dot"></span>Radio</div>
+      <div class="work-title">Tittel på radioinnslag #2</div>
+      <div class="work-outlet">NRK Innlandet</div>
+      <div class="work-desc">Hva handlet dette innslaget om, og hva var det viktigste du formidlet?</div>
+      <div class="work-date">2023</div>
+    </div>
+
+    <!-- ARTICLE 3 -->
+    <div class="work-item fade-in" data-type="article" onclick="openModal('article-3')">
+      <div class="work-type article"><span class="work-type-dot"></span>Artikkel</div>
+      <div class="work-title">Tittel på artikkel #3</div>
+      <div class="work-outlet">Lokalavisen</div>
+      <div class="work-desc">Kort beskrivelse. Hva var din rolle i denne saken? Gravjournalistikk, feature, nyheter?</div>
+      <div class="work-date">2022</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="om" class="about-section">
+  <div class="about-left fade-in">
+    <div class="label">Om meg</div>
+    <h2>Ord,<br>bilde<br>& lyd.</h2>
+  </div>
+  <div class="about-right fade-in">
+    <p>
+      Jeg er journalist med bachelor i journalistikk og erfaring fra lokalavis og NRK Innlandet, 
+      der jeg jobbet med saker til nett, TV og radio. Jeg er vant til å jobbe raskt, selvstendig 
+      og tett på folk — enten det er en nyhetssak som haster eller en lengre feature som trenger tid.
+    </p>
+    <p>
+      For øyeblikket tar jeg en master i strategisk kommunikasjon ved Kristiania University College. 
+      Det gjør at jeg bringer et bredere perspektiv til journalistikken — og vice versa. 
+      Jeg er tilgjengelig for frilansoppdrag og faste stillinger innen journalistikk og kommunikasjon.
+    </p>
+    <div class="skills-row">
+      <span class="skill-tag">Nyheter</span>
+      <span class="skill-tag">Feature</span>
+      <span class="skill-tag">TV</span>
+      <span class="skill-tag">Radio</span>
+      <span class="skill-tag">Digitalt innhold</span>
+      <span class="skill-tag">Strategisk komm.</span>
+      <span class="skill-tag">NRK</span>
+      <span class="skill-tag">Intervjuteknikk</span>
+      <span class="skill-tag">Klipping</span>
+      <span class="skill-tag">SPSS / Data</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="kontakt" class="contact-section">
+  <div class="contact-left fade-in">
+    <div class="label">Kontakt</div>
+    <h2>La oss lage noe<br><em>verdt å lese.</em></h2>
+    <p>Tilgjengelig for faste stillinger, frilansoppdrag og samarbeid innen journalistikk og strategisk kommunikasjon.</p>
+  </div>
+  <div class="contact-right fade-in">
+    <a href="mailto:post@magnusjournalist.no" class="contact-link">
+      <span>E-post</span>
+      <span>post@magnusjournalist.no →</span>
+    </a>
+    <a href="https://linkedin.com/in/magnus" class="contact-link" target="_blank">
+      <span>LinkedIn</span>
+      <span>Åpne profil →</span>
+    </a>
+    <a href="#" class="contact-link" onclick="downloadCV(event)">
+      <span>CV</span>
+      <span>Last ned PDF →</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Magnus</span>
+  <span>Journalist & Kommunikasjonsrådgiver</span>
+  <span>Oslo, Norge</span>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="closeModalDirect()">✕ Lukk</button>
+    <div class="modal-type" id="modal-type"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-outlet" id="modal-outlet"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <a href="#" id="modal-link" class="modal-link" target="_blank">Les/se hele saken →</a>
+  </div>
+</div>
+
+<script>
+  // DATE
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('no-NO', { day:'numeric', month:'long', year:'numeric' });
+
+  // WORK DATA — bytt ut med dine egne arbeider
+  const works = {
+    'tv-1': {
+      type: 'tv',
+      title: 'Legg til tittel på ditt beste TV-innslag her',
+      outlet: 'NRK Innlandet',
+      date: '2024',
+      body: 'Her skriver du en lengre beskrivelse av innslaget. Hva var bakgrunnen for saken? Hvem intervjuet du? Hva var det viktigste funnet eller poenget? Du kan også nevne hvilken respons saken fikk, og om det var noe du var spesielt fornøyd med journalistisk eller produksjonsmessig.',
+      url: 'https://nrk.no'
+    },
+    'article-1': {
+      type: 'article',
+      title: 'Tittel på artikkel #1',
+      outlet: 'Lokalavisen',
+      date: '2023',
+      body: 'Beskriv saken grundigere her. Hva var opphavet? Hvem var kildene? Hva ble konsekvensene av at saken ble publisert? Legg gjerne inn en lenke til originalen.',
+      url: '#'
+    },
+    'radio-1': {
+      type: 'radio',
+      title: 'Tittel på radioinnslag',
+      outlet: 'NRK Innlandet',
+      date: '2024',
+      body: 'Beskriv dette radioinnslaget. Hva var temaet? Hvem hørte på? Hva var det journalistiske grepet som gjorde dette innslaget minneverdig?',
+      url: '#'
+    },
+    'article-2': { type: 'article', title: 'Tittel på artikkel #2', outlet: 'Lokalavisen', date: '2023', body: 'Beskriv saken her.', url: '#' },
+    'tv-2': { type: 'tv', title: 'Tittel på TV-innslag #2', outlet: 'NRK Innlandet', date: '2024', body: 'Beskriv innslaget her.', url: '#' },
+    'radio-2': { type: 'radio', title: 'Tittel på radioinnslag #2', outlet: 'NRK Innlandet', date: '2023', body: 'Beskriv innslaget her.', url: '#' },
+    'article-3': { type: 'article', title: 'Tittel på artikkel #3', outlet: 'Lokalavisen', date: '2022', body: 'Beskriv saken her.', url: '#' },
+  };
+
+  const typeLabels = { tv: '📺 TV-innslag', radio: '🎙 Radioinnslag', article: '✍ Artikkel' };
+  const typeClass = { tv: 'tv', radio: 'radio', article: 'article' };
+
+  function openModal(id) {
+    const w = works[id];
+    if (!w) return;
+    const typeEl = document.getElementById('modal-type');
+    typeEl.innerHTML = `<span class="work-type ${w.type}"><span class="work-type-dot"></span>${typeLabels[w.type]}</span>`;
+    document.getElementById('modal-title').textContent = w.title;
+    document.getElementById('modal-outlet').textContent = `${w.outlet} — ${w.date}`;
+    document.getElementById('modal-body').textContent = w.body;
+    const link = document.getElementById('modal-link');
+    link.href = w.url;
+    link.style.display = w.url && w.url !== '#' ? 'inline-flex' : 'none';
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+  // FILTER
+  function filterWork(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.remove('active', 'active-tv', 'active-radio', 'active-article');
+    });
+    if (type === 'all') btn.classList.add('active');
+    else btn.classList.add(`active-${type}`);
+
+    let count = 0;
+    document.querySelectorAll('.work-item').forEach(item => {
+      const match = type === 'all' || item.dataset.type === type;
+      item.classList.toggle('hidden', !match);
+      if (match) count++;
+    });
+    document.getElementById('item-count').textContent = `— ${count} arbeider`;
+  }
+
+  // SCROLL ANIMATIONS
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  function downloadCV(e) {
+    e.preventDefault();
+    alert('Legg til en lenke til din CV-fil her.');
+  }
+</script>
+</body>
+</html>
